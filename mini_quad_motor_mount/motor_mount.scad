@@ -10,7 +10,7 @@ slit_size_x = 5;
 slit_size_y = 0.3;
 
 plate_height = 0.75;
-motor_diameter=7;
+motor_diameter=5.9;
 
 smd_led_size_x = 2.0;
 smd_led_size_y = 3;
