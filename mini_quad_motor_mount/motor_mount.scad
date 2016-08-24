@@ -23,35 +23,50 @@ motor_clamp_height = 6.0;
 
 width = 4.5;
 
-cylinder(r=hole_diameter/2,h=hole_height,$fn=16);
 
-// Clip is to filigrane, doesnt print well
-//{
-//  difference(){
-//    translate([0,0,hole_height])  cylinder(r1=(hole_diameter/2)*1.00, r2=(hole_diameter/2)*1.65,h=pin_height,$fn=16);
-//    translate([0,0,hole_height+pin_height])  cube([slit_size_x, slit_size_y, pin_height*2], center = true);
-//  }
-//}
-
-// Side reinforcement left
-intersection(){
-  translate([smd_offset_x,width/2+side_reinforcement_width,0]) rotate([90,0,0]) cylinder(r=smd_led_size_x,h=side_reinforcement_width,$fn=16);
-  cube([10.0, 10.0, 10.0]);
-}
-
-// Side reinforcement right
-intersection(){
-  translate([smd_offset_x,-width/2+0*side_reinforcement_width,0]) rotate([90,0,0]) cylinder(r=smd_led_size_x,h=side_reinforcement_width,$fn=16);
-  translate([0,-10.0,0]) cube([10.0, 10.0, 10.0]);
-}
-
-// Base plate and removed smd led rectangle
-{
+// Base plate with removed smd led rectangle
+module BasePlate(){
   difference(){
     translate([-width/2,-width/2]) cube([width/2+ dist_hole_edge + dist_additional + motor_clamp_thickness,width,plate_height]);
     translate([smd_offset_x-smd_led_size_x/2,-smd_led_size_y/2,-0.5]) cube([smd_led_size_x,smd_led_size_y,10.0]);
   }
 }
+
+// Side reinforcement. Half circle to strengthen sides around SMD LED hole
+module SideReinforcement(){
+  intersection(){
+    rotate([90,0,0]) cylinder(r=smd_led_size_x,h=side_reinforcement_width,$fn=16);
+    translate([0,0,smd_led_size_x]) cube([smd_led_size_x*2, smd_led_size_x*2, smd_led_size_x*2], center = true);
+  }
+}
+
+module FrameHolePin()
+{
+  cylinder(r=hole_diameter/2,h=hole_height,$fn=16);
+}
+
+// Clip is too filigrane, doesnt print well. Keeping it for anyone interested
+module FrameHolePinTopClip()
+{
+  difference(){
+    translate([0,0,hole_height])  cylinder(r1=(hole_diameter/2)*1.00, r2=(hole_diameter/2)*1.65,h=pin_height,$fn=16);
+    translate([0,0,hole_height+pin_height])  cube([slit_size_x, slit_size_y, pin_height*2], center = true);
+  }
+}
+
+
+
+FrameHolePin();
+//FrameHolePinTopClip();
+
+
+BasePlate();
+
+//Add side reinforcement at LED hole
+translate([smd_offset_x,width/2+side_reinforcement_width,0]) SideReinforcement();
+translate([smd_offset_x,-width/2,0]) SideReinforcement();
+
+
 
 
 translate([dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness ,0])
