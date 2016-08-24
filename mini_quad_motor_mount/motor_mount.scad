@@ -61,20 +61,41 @@ module FrameHolePinTopClip()
   }
 }
 
+module ClampSidePoly()
+{
+  a = [[dist_hole_edge,width/2],
+        [dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness,0],
+        [dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness,motor_diameter/2+motor_clamp_thickness]]; 
+
+
+
+  translate([0,0,plate_height/2])
+  linear_extrude(height = plate_height, center = true, convexity = 0, twist = 0)
+  polygon(a);
+
+  //linear_extrude(height = 10, center = true, convexity = 10, twist = 0)
+  //circle();
+//cube ([1, 1, 1]);
+}
+
 //Collects all basic geometry To make it easy to cut out the motor hole and clamp cutoff at the end
 module BasicGeom()
 {
    FrameHolePin();
    //FrameHolePinTopClip();
-
+   
+union(){
    BasePlate();
     //Add side reinforcement at LED hole
-    translate([smd_offset_x,width/2+side_reinforcement_width,0]) SideReinforcement();
-    translate([smd_offset_x,-width/2,0]) SideReinforcement();
-
+    translate([smd_offset_x,width/2+side_reinforcement_width-0.01,0]) SideReinforcement();
+    translate([smd_offset_x,-width/2+0.01,0]) SideReinforcement();
+}
 
     translate([dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness ,0])
     cylinder(r=motor_diameter/2+motor_clamp_thickness,h=motor_clamp_height,$fn=32);
+
+    ClampSidePoly();
+    scale([1,-1,1]) ClampSidePoly();
 }
 
 
@@ -83,7 +104,7 @@ difference(){
 
   translate([dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness ,0])
   union(){
-    translate([0,0,-0.1]) cylinder(r=motor_diameter/2,h=motor_clamp_height*1.5,$fn=32);
+    translate([0,0,-0.15]) cylinder(r=motor_diameter/2,h=motor_clamp_height*1.5,$fn=32);
     translate([(motor_diameter/2)*motor_clamp_cutoff_factor,-motor_diameter*2,-motor_diameter*2]) cube(motor_diameter*4, motor_diameter*4, motor_diameter*4);
   }
 }
