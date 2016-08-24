@@ -1,3 +1,7 @@
+// This work uses the  Creative Commons Attribution-Noncommercial-Share Alike license
+// https://creativecommons.org/licenses/by-nc-sa/1.0/ © 2016, Stefan Kohlbrecher.
+
+
 dist_hole_edge = 6.12;
 dist_additional = 2.0;
 
@@ -20,6 +24,9 @@ side_reinforcement_width = 1.0;
 
 motor_clamp_thickness = 0.7;
 motor_clamp_height = 6.0;
+
+// 0 makes motor clamp half circle, values up to 1 make it go further
+motor_clamp_cutoff_factor = 0.6;
 
 width = 4.5;
 
@@ -54,28 +61,29 @@ module FrameHolePinTopClip()
   }
 }
 
+//Collects all basic geometry To make it easy to cut out the motor hole and clamp cutoff at the end
+module BasicGeom()
+{
+   FrameHolePin();
+   //FrameHolePinTopClip();
+
+   BasePlate();
+    //Add side reinforcement at LED hole
+    translate([smd_offset_x,width/2+side_reinforcement_width,0]) SideReinforcement();
+    translate([smd_offset_x,-width/2,0]) SideReinforcement();
 
 
-FrameHolePin();
-//FrameHolePinTopClip();
-
-
-BasePlate();
-
-//Add side reinforcement at LED hole
-translate([smd_offset_x,width/2+side_reinforcement_width,0]) SideReinforcement();
-translate([smd_offset_x,-width/2,0]) SideReinforcement();
-
-
-
-
-translate([dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness ,0])
-difference(){  
-  difference(){
+    translate([dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness ,0])
     cylinder(r=motor_diameter/2+motor_clamp_thickness,h=motor_clamp_height,$fn=32);
-    translate([0,0,-0.1]) cylinder(r=motor_diameter/2,h=motor_clamp_height*1.5,$fn=32);
-  }
-  //translate(0, 10, 0) cube(20, 200, 20);
-  translate([1.75,-motor_diameter*2,-motor_diameter*2]) cube(motor_diameter*4, motor_diameter*4, motor_diameter*4);
+}
 
+
+difference(){
+  BasicGeom();
+
+  translate([dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness ,0])
+  union(){
+    translate([0,0,-0.1]) cylinder(r=motor_diameter/2,h=motor_clamp_height*1.5,$fn=32);
+    translate([(motor_diameter/2)*motor_clamp_cutoff_factor,-motor_diameter*2,-motor_diameter*2]) cube(motor_diameter*4, motor_diameter*4, motor_diameter*4);
+  }
 }
