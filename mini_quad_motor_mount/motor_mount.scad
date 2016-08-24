@@ -2,7 +2,10 @@
 // https://creativecommons.org/licenses/by-nc-sa/1.0/ © 2016, Stefan Kohlbrecher.
 
 
+// Distance between the mounting pin an the edge of the frame
 dist_hole_edge = 6.12;
+
+//Additional distance beyond the edge of the frame for the clamp
 dist_additional = 2.0;
 
 //@ToDo: Rename hole -> pin or so
@@ -24,6 +27,7 @@ side_reinforcement_width = 1.0;
 
 motor_clamp_thickness = 0.7;
 motor_clamp_height = 6.0;
+motor_clamp_top_reinforcement_width = 1;
 
 // 0 makes motor clamp half circle, values up to 1 make it go further
 motor_clamp_cutoff_factor = 0.6;
@@ -52,7 +56,7 @@ module FrameHolePin()
   cylinder(r=hole_diameter/2,h=hole_height,$fn=16);
 }
 
-// Clip is too filigrane, doesnt print well. Keeping it for anyone interested
+// Clip is too filigrane, doesnt print well. Keeping it for anyone interested to try
 module FrameHolePinTopClip()
 {
   difference(){
@@ -61,7 +65,7 @@ module FrameHolePinTopClip()
   }
 }
 
-module ClampSidePoly()
+module ClampSideReinforcement()
 {
   a = [[dist_hole_edge,width/2],
         [dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness,0],
@@ -76,6 +80,31 @@ module ClampSidePoly()
   //linear_extrude(height = 10, center = true, convexity = 10, twist = 0)
   //circle();
 //cube ([1, 1, 1]);
+}
+
+module ClampTopReinforcement()
+{
+  //clamp_top_poly= [[dist_hole_edge,clamp_top_poly_width],
+  //      [dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness,0],
+  //      [dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness,motor_diameter/2+motor_clamp_thickness]];
+
+  scale_x = (dist_hole_edge + dist_additional) - (smd_offset_x+smd_led_size_x/2);
+  scale_y = motor_clamp_height - plate_height;
+  
+
+  translate([smd_offset_x+smd_led_size_x/2,-motor_clamp_top_reinforcement_width/2,plate_height+scale_y-0.001])
+  rotate([-90,0,0])
+  scale([scale_x,scale_y,1])
+
+  {
+    difference()
+    {
+      cube([1, 1, 1]);
+      translate([0,0,-motor_clamp_top_reinforcement_width/2]) cylinder(r=1, h=motor_clamp_top_reinforcement_width*2,$fn=32);
+    }
+    translate([1,0,0])
+    cube ([1,1,1]); 
+  }
 }
 
 //Collects all basic geometry To make it easy to cut out the motor hole and clamp cutoff at the end
@@ -94,8 +123,10 @@ union(){
     translate([dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness ,0])
     cylinder(r=motor_diameter/2+motor_clamp_thickness,h=motor_clamp_height,$fn=32);
 
-    ClampSidePoly();
-    scale([1,-1,1]) ClampSidePoly();
+    ClampSideReinforcement();
+    scale([1,-1,1]) ClampSideReinforcement();
+
+    ClampTopReinforcement();
 }
 
 
