@@ -12,7 +12,7 @@ dist_additional = 2.0;
 pin_diameter = 1;
 
 // Diameter of the pin for the hole in the frame
-pin_length = 2.1;
+pin_length = 1.35;
 
 // Height of the main plate
 plate_thickness = 0.75;
@@ -22,7 +22,6 @@ plate_width = 4.5;
 
 // Motor diameter. It is recommended to make this a little smaller than actual motor diameter (e.g. 5.9 for 6mm motors)
 motor_diameter=5.9;
-
 
 // Thickness of motor clamp
 motor_clamp_thickness = 0.7;
@@ -51,9 +50,13 @@ smd_led_side_reinforcement_width = 1.0;
 
 // Base plate with removed smd led rectangle
 module BasePlate(){
-  difference(){
-    translate([-plate_width/2,-plate_width/2]) cube([plate_width/2+ dist_hole_edge + dist_additional + motor_clamp_thickness,plate_width,plate_thickness]);
-    translate([smd_led_offset_x-smd_led_size_x/2,-smd_led_size_y/2,-0.5]) cube([smd_led_size_x,smd_led_size_y,10.0]);
+
+  union(){
+    cylinder(r=plate_width/2,h=plate_thickness,$fn=32);
+    difference(){
+      translate([0,-plate_width/2]) cube([ dist_hole_edge + dist_additional + motor_clamp_thickness,plate_width,plate_thickness]);
+      translate([smd_led_offset_x-smd_led_size_x/2,-smd_led_size_y/2,-0.5]) cube([smd_led_size_x,smd_led_size_y,10.0]);
+    }
   }
 }
 
@@ -67,7 +70,7 @@ module SideReinforcement(){
 
 module FrameHolePin()
 {
-  cylinder(r=pin_diameter/2,h=pin_length,$fn=16);
+  translate([0,0,plate_thickness]) cylinder(r=pin_diameter/2,h=pin_length,$fn=16);
 }
 
 // Clip is too filigrane, doesnt print well. Keeping it for anyone interested to try
@@ -101,10 +104,6 @@ module ClampSideReinforcement()
 
 module ClampTopReinforcement()
 {
-  //clamp_top_poly= [[dist_hole_edge,clamp_top_poly_width],
-  //      [dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness,0],
-  //      [dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness,motor_diameter/2+motor_clamp_thickness]];
-
   scale_x = (dist_hole_edge + dist_additional) - (smd_led_offset_x+smd_led_size_x/2);
   scale_y = motor_clamp_height - plate_thickness;
   
