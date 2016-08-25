@@ -21,7 +21,7 @@ plate_thickness = 0.75;
 plate_width = 4.5;
 
 // Motor diameter. It is recommended to make this a little smaller than actual motor diameter (e.g. 5.9 for 6mm motors)
-motor_diameter=5.9;
+motor_diameter=5.85;
 
 // Thickness of motor clamp
 motor_clamp_thickness = 0.7;
