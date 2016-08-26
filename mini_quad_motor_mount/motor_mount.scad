@@ -9,7 +9,7 @@ dist_hole_edge = 6.12;
 dist_additional = 2.0;
 
 // Diameter of the pin for the hole in the frame
-pin_diameter = 1;
+pin_diameter = 0.9;
 
 // Diameter of the pin for the hole in the frame
 pin_length = 1.35;
@@ -21,7 +21,7 @@ plate_thickness = 0.75;
 plate_width = 4.5;
 
 // Motor diameter. It is recommended to make this a little smaller than actual motor diameter (e.g. 5.9 for 6mm motors)
-motor_diameter=5.85;
+motor_diameter=5.9;
 
 // Thickness of motor clamp
 motor_clamp_thickness = 0.7;
@@ -66,6 +66,8 @@ module SideReinforcement(){
     rotate([90,0,0]) cylinder(r=smd_led_size_x,h=smd_led_side_reinforcement_width,$fn=16);
     translate([0,0,smd_led_size_x]) cube([smd_led_size_x*2, smd_led_size_x*2, smd_led_size_x*2], center = true);
   }
+
+  translate([0,-smd_led_side_reinforcement_width,0]) cube([8, smd_led_side_reinforcement_width, smd_led_size_x]);
 }
 
 module FrameHolePin()
