@@ -67,7 +67,7 @@ module SideReinforcement(){
     translate([0,0,smd_led_size_x]) cube([smd_led_size_x*2, smd_led_size_x*2, smd_led_size_x*2], center = true);
   }
 
-  translate([0,-smd_led_side_reinforcement_width,0]) cube([8, smd_led_side_reinforcement_width, smd_led_size_x]);
+  translate([0,-smd_led_side_reinforcement_width,0]) cube([dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness, smd_led_side_reinforcement_width, smd_led_size_x]);
 }
 
 module FrameHolePin()
