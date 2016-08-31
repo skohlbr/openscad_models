@@ -1,12 +1,21 @@
 // This work uses the  Creative Commons Attribution-Noncommercial-Share Alike license
 // https://creativecommons.org/licenses/by-nc-sa/1.0/ © 2016, Stefan Kohlbrecher.
 
+//Diameter of props
+prop_diameter = 56;
+
+//Desired prop to prop distance
+prop_prop_distance = 5;
+
+//Diagonal length of PCB from arm end to arm end
+pcb_diagonal_length = 56;
 
 // Distance between the mounting pin an the edge of the frame. This is fixed for a given frame.
 dist_hole_edge = 6.12;
 
-//Additional distance beyond the edge of the frame for the clamp
-dist_additional = 2.0;
+// Distance of motor to center of pcb
+dist_center_pcb_to_motor = ((prop_diameter + prop_prop_distance)/2) * sqrt(2);
+//echo (dist_center_pcb_to_motor);
 
 // Diameter of the pin for the hole in the frame
 pin_diameter = 0.9;
@@ -21,7 +30,7 @@ plate_thickness = 0.75;
 plate_width = 4.5;
 
 // Motor diameter. It is recommended to make this a little smaller than actual motor diameter (e.g. 5.9 for 6mm motors)
-motor_diameter=5.9;
+motor_diameter=6.9;
 
 // Thickness of motor clamp
 motor_clamp_thickness = 0.7;
@@ -46,6 +55,10 @@ smd_led_offset_x = 5.25;
 
 // Width of the reinforcement half circles near SMD LED
 smd_led_side_reinforcement_width = 1.0;
+
+//Additional distance beyond the edge of the frame for the clamp
+dist_additional = dist_center_pcb_to_motor - (pcb_diagonal_length/2 + motor_diameter/2+motor_clamp_thickness);
+//echo (dist_additional);
 
 
 // Base plate with removed smd led rectangle
@@ -120,7 +133,7 @@ module ClampTopReinforcement()
       cube([1, 1, 1]);
       translate([0,0,-motor_clamp_top_reinforcement_width/2]) cylinder(r=1, h=motor_clamp_top_reinforcement_width*2,$fn=32);
     }
-    translate([1,0,0])
+    scale([1,1,1]) translate([1,0,0])
     cube ([1,1,1]); 
   }
 }
