@@ -29,6 +29,12 @@ plate_thickness = 0.75;
 // Width of main plate
 plate_width = 4.5;
 
+// Arm widening per mm.
+arm_widening_per_mm = 0.060013;
+
+// Side strengthening dist from arm end
+side_strengthening_length_inward = dist_hole_edge;
+
 // Motor diameter. It is recommended to make this a little smaller than actual motor diameter (e.g. 5.9 for 6mm motors)
 motor_diameter=6.9;
 
@@ -65,7 +71,7 @@ dist_additional = dist_center_pcb_to_motor - (pcb_diagonal_length/2 + motor_diam
 module BasePlate(){
 
   union(){
-    cylinder(r=plate_width/2,h=plate_thickness,$fn=32);
+    scale ([plate_width/2,plate_width/2+smd_led_side_reinforcement_width+arm_widening_per_mm*side_strengthening_length_inward,1]) cylinder(r=1,h=plate_thickness,$fn=32);
     difference(){
       translate([0,-plate_width/2]) cube([ dist_hole_edge + dist_additional + motor_clamp_thickness,plate_width,plate_thickness]);
       translate([smd_led_offset_x-smd_led_size_x/2,-smd_led_size_y/2,-0.5]) cube([smd_led_size_x,smd_led_size_y,10.0]);
@@ -75,12 +81,30 @@ module BasePlate(){
 
 // Side reinforcement. Half circle to strengthen sides around SMD LED hole
 module SideReinforcement(){
-  intersection(){
-    rotate([90,0,0]) cylinder(r=smd_led_size_x,h=smd_led_side_reinforcement_width,$fn=16);
-    translate([0,0,smd_led_size_x]) cube([smd_led_size_x*2, smd_led_size_x*2, smd_led_size_x*2], center = true);
-  }
+  //intersection(){
+  //  rotate([90,0,0]) cylinder(r=smd_led_size_x,h=smd_led_side_reinforcement_width,$fn=16);
+  //  translate([0,0,smd_led_size_x]) cube([smd_led_size_x*2, smd_led_size_x*2, smd_led_size_x*2], center = true);
+  //}
 
   translate([0,-smd_led_side_reinforcement_width,0]) cube([dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness, smd_led_side_reinforcement_width, smd_led_size_x]);
+
+  side_reinf_gap_fill = [[0,0],
+        [-side_strengthening_length_inward,-arm_widening_per_mm*side_strengthening_length_inward],
+        [-side_strengthening_length_inward,arm_widening_per_mm*side_strengthening_length_inward]]; 
+
+  translate([0,-smd_led_side_reinforcement_width,plate_thickness/2])
+  linear_extrude(height = plate_thickness, center = true, convexity = 0, twist = 0)
+  polygon(side_reinf_gap_fill);
+
+  side_reinf_angled = [[0,0],
+        [0,smd_led_side_reinforcement_width],
+        [-side_strengthening_length_inward,smd_led_side_reinforcement_width+arm_widening_per_mm*side_strengthening_length_inward],
+        [-side_strengthening_length_inward,+arm_widening_per_mm*side_strengthening_length_inward]]; 
+  
+  translate([0,-smd_led_side_reinforcement_width,smd_led_size_x/2])
+  linear_extrude(height = smd_led_size_x, center = true, convexity = 0, twist = 0)
+  polygon(side_reinf_angled);
+
 }
 
 module FrameHolePin()
@@ -147,8 +171,13 @@ module BasicGeom()
 union(){
    BasePlate();
     //Add side reinforcement at LED hole
-    translate([smd_led_offset_x,plate_width/2+smd_led_side_reinforcement_width-0.01,0]) SideReinforcement();
-    translate([smd_led_offset_x,-plate_width/2+0.01,0]) SideReinforcement();
+    mirror([0,1,0]){
+      translate([dist_hole_edge,plate_width/2+smd_led_side_reinforcement_width,0]) SideReinforcement();
+    }
+
+    translate([dist_hole_edge,plate_width/2+smd_led_side_reinforcement_width,0]) SideReinforcement();
+
+    //translate([dist_hole_edge,-plate_width/2+0.01,0]) SideReinforcement();
 }
 
     translate([dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness ,0])
