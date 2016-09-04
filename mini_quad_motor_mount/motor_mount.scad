@@ -62,6 +62,15 @@ smd_led_offset_x = 5.25;
 // Width of the reinforcement half circles near SMD LED
 smd_led_side_reinforcement_width = 1.0;
 
+// Distance of arm knot notch 
+arm_knot_notch_offset_x = 3.93;
+
+// Arm knot notch radius
+arm_knot_notch_radius = 1;
+
+// Arm knot notch center_z;
+arm_knot_notch_offset_z = 2.65;
+
 //Additional distance beyond the edge of the frame for the clamp
 dist_additional = dist_center_pcb_to_motor - (pcb_diagonal_length/2 + motor_diameter/2+motor_clamp_thickness);
 //echo (dist_additional);
@@ -96,16 +105,29 @@ module SideReinforcement(){
   linear_extrude(height = plate_thickness, center = true, convexity = 0, twist = 0)
   polygon(side_reinf_gap_fill);
 
+
   side_reinf_angled = [[0,0],
         [0,smd_led_side_reinforcement_width],
         [-side_strengthening_length_inward,smd_led_side_reinforcement_width+arm_widening_per_mm*side_strengthening_length_inward],
         [-side_strengthening_length_inward,+arm_widening_per_mm*side_strengthening_length_inward]]; 
-  
+ 
+difference(){ 
   translate([0,-smd_led_side_reinforcement_width,smd_led_size_x/2])
   linear_extrude(height = smd_led_size_x, center = true, convexity = 0, twist = 0)
   polygon(side_reinf_angled);
 
+
+  translate([-side_strengthening_length_inward+smd_led_size_x,arm_widening_per_mm*side_strengthening_length_inward,0])
+  rotate ([90,0,0])
+  difference(){
+    translate ([-smd_led_size_x,0,-smd_led_size_x/2]) cube([smd_led_size_x, smd_led_size_x, smd_led_size_x*2]);
+    cylinder(r=smd_led_size_x,h=smd_led_side_reinforcement_width*5,$fn=32, center = true);
+    
+  }
 }
+}
+
+
 
 module FrameHolePin()
 {
@@ -189,13 +211,32 @@ union(){
     ClampTopReinforcement();
 }
 
-
-difference(){
-  BasicGeom();
-
+module ClampCutOut()
+{
   translate([dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness ,0])
   union(){
     translate([0,0,-0.15]) cylinder(r=motor_diameter/2,h=motor_clamp_height*1.5,$fn=32);
     translate([(motor_diameter/2)*motor_clamp_cutoff_factor,-motor_diameter*2,-motor_diameter*2]) cube(motor_diameter*4, motor_diameter*4, motor_diameter*4);
   }
+}
+
+
+module MotorMount()
+{
+  difference(){
+    BasicGeom();
+    ClampCutOut();
+  }
+}
+
+module ArmKnotNotch()
+{
+  translate([arm_knot_notch_offset_x,0,arm_knot_notch_offset_z])
+  rotate ([90,0,0])
+  cylinder(r=arm_knot_notch_radius,h=10,$fn=32, center = true);
+}
+
+difference(){
+  MotorMount();
+  ArmKnotNotch();
 }
