@@ -122,7 +122,7 @@ difference(){
   translate([-side_strengthening_length_inward+side_strengthening_height,arm_widening_per_mm*side_strengthening_length_inward,0])
   rotate ([90,0,0])
   difference(){
-    translate ([-side_strengthening_height,0,-side_strengthening_height/2]) cube([side_strengthening_height, side_strengthening_height, side_strengthening_height*2]);
+    translate ([-side_strengthening_height*2,0,-side_strengthening_height/2]) cube([side_strengthening_height*2, side_strengthening_height*2, side_strengthening_height*2]);
     cylinder(r=side_strengthening_height,h=smd_led_side_reinforcement_width*5,$fn=32, center = true);
     
   }
