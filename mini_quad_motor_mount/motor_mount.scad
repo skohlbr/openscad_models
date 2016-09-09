@@ -27,7 +27,7 @@ pin_length = 1.35;
 plate_thickness = 0.75;
 
 // Width of main plate
-plate_width = 4.5;
+plate_width = 4.3;
 
 // Arm widening per mm.
 arm_widening_per_mm = 0.060013;
@@ -35,8 +35,10 @@ arm_widening_per_mm = 0.060013;
 // Side strengthening dist from arm end
 side_strengthening_length_inward = dist_hole_edge;
 
+side_strengthening_height = 1.5;
+
 // Motor diameter. It is recommended to make this a little smaller than actual motor diameter (e.g. 5.9 for 6mm motors)
-motor_diameter=6.9;
+motor_diameter=5.9;
 
 // Thickness of motor clamp
 motor_clamp_thickness = 0.7;
@@ -72,7 +74,7 @@ arm_knot_notch_radius = 1;
 arm_knot_notch_offset_z = 2.65;
 
 //Additional distance beyond the edge of the frame for the clamp
-dist_additional = dist_center_pcb_to_motor - (pcb_diagonal_length/2 + motor_diameter/2+motor_clamp_thickness);
+dist_additional = 2.0;//dist_center_pcb_to_motor - (pcb_diagonal_length/2 + motor_diameter/2+motor_clamp_thickness);
 //echo (dist_additional);
 
 
@@ -80,7 +82,7 @@ dist_additional = dist_center_pcb_to_motor - (pcb_diagonal_length/2 + motor_diam
 module BasePlate(){
 
   union(){
-    scale ([plate_width/2,plate_width/2+smd_led_side_reinforcement_width+arm_widening_per_mm*side_strengthening_length_inward,1]) cylinder(r=1,h=plate_thickness,$fn=32);
+    scale ([plate_width/1.5,plate_width/2+arm_widening_per_mm*side_strengthening_length_inward,1]) cylinder(r=1,h=plate_thickness,$fn=32);
     difference(){
       translate([0,-plate_width/2]) cube([ dist_hole_edge + dist_additional + motor_clamp_thickness,plate_width,plate_thickness]);
       translate([smd_led_offset_x-smd_led_size_x/2,-smd_led_size_y/2,-0.5]) cube([smd_led_size_x,smd_led_size_y,10.0]);
@@ -95,7 +97,7 @@ module SideReinforcement(){
   //  translate([0,0,smd_led_size_x]) cube([smd_led_size_x*2, smd_led_size_x*2, smd_led_size_x*2], center = true);
   //}
 
-  translate([0,-smd_led_side_reinforcement_width,0]) cube([dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness, smd_led_side_reinforcement_width, smd_led_size_x]);
+  translate([0,-smd_led_side_reinforcement_width,0]) cube([dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness, smd_led_side_reinforcement_width, side_strengthening_height]);
 
   side_reinf_gap_fill = [[0,0],
         [-side_strengthening_length_inward,-arm_widening_per_mm*side_strengthening_length_inward],
@@ -112,16 +114,16 @@ module SideReinforcement(){
         [-side_strengthening_length_inward,+arm_widening_per_mm*side_strengthening_length_inward]]; 
  
 difference(){ 
-  translate([0,-smd_led_side_reinforcement_width,smd_led_size_x/2])
-  linear_extrude(height = smd_led_size_x, center = true, convexity = 0, twist = 0)
+  translate([0,-smd_led_side_reinforcement_width,side_strengthening_height/2])
+  linear_extrude(height = side_strengthening_height, center = true, convexity = 0, twist = 0)
   polygon(side_reinf_angled);
 
 
-  translate([-side_strengthening_length_inward+smd_led_size_x,arm_widening_per_mm*side_strengthening_length_inward,0])
+  translate([-side_strengthening_length_inward+side_strengthening_height,arm_widening_per_mm*side_strengthening_length_inward,0])
   rotate ([90,0,0])
   difference(){
-    translate ([-smd_led_size_x,0,-smd_led_size_x/2]) cube([smd_led_size_x, smd_led_size_x, smd_led_size_x*2]);
-    cylinder(r=smd_led_size_x,h=smd_led_side_reinforcement_width*5,$fn=32, center = true);
+    translate ([-side_strengthening_height,0,-side_strengthening_height/2]) cube([side_strengthening_height, side_strengthening_height, side_strengthening_height*2]);
+    cylinder(r=side_strengthening_height,h=smd_led_side_reinforcement_width*5,$fn=32, center = true);
     
   }
 }
@@ -238,5 +240,5 @@ module ArmKnotNotch()
 
 difference(){
   MotorMount();
-  ArmKnotNotch();
+  //ArmKnotNotch();
 }
