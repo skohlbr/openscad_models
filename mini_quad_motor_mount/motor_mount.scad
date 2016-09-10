@@ -219,7 +219,7 @@ module ClampCutOut()
   translate([dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness ,0])
   union(){
     translate([0,0,-0.15]) cylinder(r=motor_diameter/2,h=motor_clamp_height*1.5,$fn=32);
-    translate([(motor_diameter/2)*motor_clamp_cutoff_factor,-motor_diameter*2,-motor_diameter*2]) cube(motor_diameter*4, motor_diameter*4, motor_diameter*4);
+    translate([(motor_diameter/2)*motor_clamp_cutoff_factor,-motor_diameter*20,-motor_diameter*20]) cube(motor_diameter*40, motor_diameter*40, motor_diameter*40);
   }
 }
 
