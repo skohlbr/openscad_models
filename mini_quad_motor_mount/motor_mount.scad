@@ -179,11 +179,11 @@ module ClampTopReinforcement()
   {
     difference()
     {
-      cube([1, 1, 1]);
+      cube([1, 1, motor_clamp_top_reinforcement_width]);
       translate([0,0,-motor_clamp_top_reinforcement_width/2]) cylinder(r=1, h=motor_clamp_top_reinforcement_width*2,$fn=32);
     }
     scale([1,1,1]) translate([1,0,0])
-    cube ([1,1,1]); 
+    cube ([1,1,motor_clamp_top_reinforcement_width]); 
   }
 }
 
