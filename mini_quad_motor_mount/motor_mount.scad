@@ -91,14 +91,14 @@ module BasePlate(){
   }
 }
 
-// Side reinforcement. Half circle to strengthen sides around SMD LED hole
+// Side reinforcement. Avoids breaking due to bending.
 module SideReinforcement(){
   //intersection(){
   //  rotate([90,0,0]) cylinder(r=smd_led_size_x,h=smd_led_side_reinforcement_width,$fn=16);
   //  translate([0,0,smd_led_size_x]) cube([smd_led_size_x*2, smd_led_size_x*2, smd_led_size_x*2], center = true);
   //}
 
-  translate([0,-smd_led_side_reinforcement_width,0]) cube([dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness, smd_led_side_reinforcement_width, side_strengthening_height]);
+  translate([0,-smd_led_side_reinforcement_width,0]) cube([dist_additional +motor_diameter/2+motor_clamp_thickness, smd_led_side_reinforcement_width, side_strengthening_height]);
 
   side_reinf_gap_fill = [[0,0],
         [-side_strengthening_length_inward,-arm_widening_per_mm*side_strengthening_length_inward],
@@ -219,7 +219,7 @@ module ClampCutOut()
   translate([dist_hole_edge + dist_additional +motor_diameter/2+motor_clamp_thickness ,0])
   union(){
     translate([0,0,-0.15]) cylinder(r=motor_diameter/2,h=motor_clamp_height*1.5,$fn=32);
-    translate([(motor_diameter/2)*motor_clamp_cutoff_factor,-motor_diameter*20,-motor_diameter*20]) cube(motor_diameter*40, motor_diameter*40, motor_diameter*40);
+    translate([(motor_diameter/2)*motor_clamp_cutoff_factor,-motor_diameter*2,-motor_diameter*2]) cube(dist_center_pcb_to_motor, motor_diameter*4, motor_diameter*4);
   }
 }
 
