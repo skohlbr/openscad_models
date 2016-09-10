@@ -2,40 +2,10 @@
 // https://creativecommons.org/licenses/by-nc-sa/1.0/ © 2016, Stefan Kohlbrecher.
 
 //Diameter of props
-prop_diameter = 56;
+prop_diameter = 45.5;
 
 //Desired prop to prop distance
-prop_prop_distance = 5;
-
-//Diagonal length of PCB from arm end to arm end
-pcb_diagonal_length = 56;
-
-// Distance between the mounting pin an the edge of the frame. This is fixed for a given frame.
-dist_hole_edge = 6.12;
-
-// Distance of motor to center of pcb
-dist_center_pcb_to_motor = ((prop_diameter + prop_prop_distance)/2) * sqrt(2);
-//echo (dist_center_pcb_to_motor);
-
-// Diameter of the pin for the hole in the frame
-pin_diameter = 0.9;
-
-// Diameter of the pin for the hole in the frame
-pin_length = 1.35;
-
-// Height of the main plate
-plate_thickness = 0.75;
-
-// Width of main plate
-plate_width = 4.3;
-
-// Arm widening per mm.
-arm_widening_per_mm = 0.060013;
-
-// Side strengthening dist from arm end
-side_strengthening_length_inward = dist_hole_edge;
-
-side_strengthening_height = 1.5;
+prop_prop_distance = 2.08829;
 
 // Motor diameter. It is recommended to make this a little smaller than actual motor diameter (e.g. 5.9 for 6mm motors)
 motor_diameter=5.9;
@@ -52,6 +22,37 @@ motor_clamp_top_reinforcement_width = 1;
 // 0 makes motor clamp half circle, values up to 1 make it go further around the motor
 motor_clamp_cutoff_factor = 0.6;
 
+//Diagonal length of PCB from arm end to arm end. Given default correct for H8/H101.
+pcb_diagonal_length = 56;
+
+// Distance between the mounting pin and the edge of the flight controller. This is constant for a given flight controller. Given default correct for H8/H101
+dist_hole_edge = 6.12;
+
+// Distance of motor to center of pcb
+dist_center_pcb_to_motor = ((prop_diameter + prop_prop_distance)/2) * sqrt(2);
+//echo (dist_center_pcb_to_motor);
+
+// Diameter of the pin for the hole in the frame
+pin_diameter = 0.9;
+
+// Length/height of the pin for the hole in the frame
+pin_length = 1.35;
+
+// Height of the main plate
+plate_thickness = 0.75;
+
+// Width of main plate
+plate_width = 4.3;
+
+// Arm widening per mm. For arms that are conical shape. Given default correct for H8/H101
+arm_widening_per_mm = 0.060013;
+
+// Side strengthening dist from arm end
+side_strengthening_length_inward = dist_hole_edge;
+
+// Height of the side reinforcement structure
+side_strengthening_height = 1.5;
+
 // Size of SMD LED hole (x)
 smd_led_size_x = 2.0;
 
@@ -65,16 +66,16 @@ smd_led_offset_x = 5.25;
 smd_led_side_reinforcement_width = 1.0;
 
 // Distance of arm knot notch 
-arm_knot_notch_offset_x = 3.93;
+//arm_knot_notch_offset_x = 3.93;
 
 // Arm knot notch radius
-arm_knot_notch_radius = 1;
+//arm_knot_notch_radius = 1;
 
 // Arm knot notch center_z;
-arm_knot_notch_offset_z = 2.65;
+//arm_knot_notch_offset_z = 2.65;
 
 //Additional distance beyond the edge of the frame for the clamp
-dist_additional = 2.0;//dist_center_pcb_to_motor - (pcb_diagonal_length/2 + motor_diameter/2+motor_clamp_thickness);
+dist_additional = dist_center_pcb_to_motor - (pcb_diagonal_length/2 + motor_diameter/2+motor_clamp_thickness);
 //echo (dist_additional);
 
 
