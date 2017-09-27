@@ -10,7 +10,7 @@ motor_mount_screw_diameter = 1.5;
 motor_mount_screw_padding = 2.0;
 
 // Distance of motor screw holes from center
-motor_mount_screw_dist_from_center = 10.0;
+motor_mount_screw_dist_from_center = 8.0;
 
 // Number of motor screw holes
 num_screw_holes = 4;
@@ -39,10 +39,22 @@ module ScrewHole()
 
 module MiddleHole()
 {
-  difference(){
-    cylinder(r=motor_mount_screw_dist_from_center,h=plate_thickness,$fn=32, center = true);
-    cylinder(r=motor_mount_middle_hole_diameter,h=plate_thickness*2,$fn=32, center = true);
-  }       
+  difference(){  
+    difference(){
+      cylinder(r=motor_mount_screw_dist_from_center,h=plate_thickness,$fn=32, center = true);
+      cylinder(r=motor_mount_middle_hole_diameter,h=plate_thickness*2,$fn=32, center = true);
+    }
+    
+    for (i=[0:num_screw_holes])
+    {
+      
+     rotate([0, 0, i * angle_step])
+      
+     translate([10,0,0])
+     cylinder(r=motor_mount_screw_diameter+motor_mount_screw_padding,h=plate_thickness*2,$fn=32, center = true);
+    }
+
+  }    
 }
 
 
@@ -57,7 +69,7 @@ module MotorSoftMount()
       
      rotate([0, 0, i * angle_step])
       
-     translate([10,0,0])
+     translate([motor_mount_screw_dist_from_center,0,0])
      ScrewHole();
      
     }
