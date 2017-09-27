@@ -44,14 +44,12 @@ module MiddleHole()
       cylinder(r=motor_mount_screw_dist_from_center,h=plate_thickness,$fn=32, center = true);
       cylinder(r=motor_mount_middle_hole_diameter,h=plate_thickness*2,$fn=32, center = true);
     }
-    
+        
     for (i=[0:num_screw_holes])
     {
-      
-     rotate([0, 0, i * angle_step])
-      
-     translate([10,0,0])
-     cylinder(r=motor_mount_screw_diameter+motor_mount_screw_padding,h=plate_thickness*2,$fn=32, center = true);
+      rotate([0, 0, i * angle_step])
+      translate([10,0,0])
+      cylinder(r=motor_mount_screw_diameter+motor_mount_screw_padding,h=plate_thickness*2,$fn=32, center = true);
     }
 
   }    
@@ -78,5 +76,4 @@ module MotorSoftMount()
 
 difference(){
   MotorSoftMount();
-  //ArmKnotNotch();
 }
