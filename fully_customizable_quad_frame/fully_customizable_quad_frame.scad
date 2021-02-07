@@ -31,9 +31,14 @@ prop_height = 10.0;
 prop_diameter = 75;
 
 fc_mount_format = 16;
-fc_screw_dia = 2;
+fc_screw_dia = 1.8;
 
 
+// weight 1.8 5.24g
+// weight 2.4 6.14g
+profile_width = 2.4;
+profile_height = 4.0;
+profile_min_width_plate = 0.75;
 
 
 module ScrewHole()
@@ -98,17 +103,17 @@ module AddProps()
 
 module FcPin()
 {
-     cylinder  (5.0 ,    (fc_screw_dia/2)*1.5,    (fc_screw_dia/2)*1.5, $fn=180);
-     translate([0,0,5.0])
-     cylinder  (4.0 ,        (fc_screw_dia/2),    (fc_screw_dia/2), $fn=180);
+     cylinder  (3.0 ,    (fc_screw_dia/2)*1.5,    (fc_screw_dia/2)*1.5, $fn=180);
+     translate([0,0,3.0])
+     cylinder  (7.0 ,        (fc_screw_dia/2),    (fc_screw_dia/2), $fn=180);
 }
 
 module FcMount()
 {
-  translate([ fc_mount_format/2, fc_mount_format/2,2.0]) FcPin();   
-  translate([ fc_mount_format/2,-fc_mount_format/2,2.0]) FcPin();
-  translate([-fc_mount_format/2,-fc_mount_format/2,2.0]) FcPin();
-  translate([-fc_mount_format/2, fc_mount_format/2,2.0]) FcPin();       
+  translate([ fc_mount_format/2, fc_mount_format/2,profile_height*0.65]) FcPin();   
+  translate([ fc_mount_format/2,-fc_mount_format/2,profile_height*0.65]) FcPin();
+  translate([-fc_mount_format/2,-fc_mount_format/2,profile_height*0.65]) FcPin();
+  translate([-fc_mount_format/2, fc_mount_format/2,profile_height*0.65]) FcPin();       
 }
 
 module simpleDiagonal()
@@ -126,7 +131,7 @@ module simpleCross()
 
 module profilePoly()
 {
-   rotate([0, 0, 90]) polygon( points=[[-0.5,0],[0.5,0],[1.8,2.5],[1, 3.8], [0,4],[-1, 3.8],[-1.8,2.5]] ); 
+   rotate([0, 0, 90]) polygon( points=[[-profile_width * (profile_min_width_plate/3.6),0],[profile_width * (profile_min_width_plate/3.6),0],[profile_width * (1.8/3.6),profile_height * (2.5/4.0)],[profile_width * (1/3.6), 3.8], [0,profile_height],[-profile_width * (1/3.6), profile_height * (3.8/4.0)],[-profile_width * (1.8/3.6),profile_height * (2.5/4.0)]] ); 
 }
 
 module profileLinear(length)
@@ -146,19 +151,20 @@ translate([radius, 0, 0])  rotate([0, 0, -90]) profilePoly();
 
 module angledProfileCross(size)
 {
-    translate([-size, 0, 0])
+    translation = size + 2;
+    translate([-translation, 0, 0])
     rotate([0, 0, -45])
     profileAngular((size/2) * sqrt(2), 90);
     
-    translate([0,-size, 0])
+    translate([0,-translation, 0])
     rotate([0, 0, 45])
     profileAngular((size/2) * sqrt(2), 90);
     
-    translate([size, 0,0])
+    translate([translation, 0,0])
     rotate([0, 0, 135])
     profileAngular((size/2) * sqrt(2), 90);
     
-    translate([0,size, 0])
+    translate([0,translation, 0])
     rotate([0, 0, -135])
     profileAngular((size/2) * sqrt(2), 90);
 
