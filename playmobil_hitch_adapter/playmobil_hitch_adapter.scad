@@ -12,22 +12,37 @@ length = 50;
 rod_length = length - ring_diameter;
 
 pin_length = 8;
-pin_diameter = 3;
+pin_diameter = 4;
 
 module profilePoly()
-{
-   //rotate([0, 0, 90]) polygon( points=[[-profile_width * (profile_min_width_plate/3.6),0],[profile_width * (profile_min_width_plate/3.6),0],[profile_width * (1.8/3.6),profile_height * (2.5/4.0)],[profile_width * (1/3.6), 3.8], [0,profile_height],[-profile_width * (1/3.6), profile_height * (3.8/4.0)],[-profile_width * (1.8/3.6),profile_height * (2.5/4.0)]] ); 
-    
-    circle(d=ring_strength, $fn=50);       
+{    
+  circle(d=ring_strength, $fn=50);       
 }
 
-module pinGeom()
+module pinGeomSimpleCylinderWithHat()
 {
   cylinder(h = height, r1 = ring_diameter/2, r2 = ring_diameter/2, center = true);
   translate([0, 0, height/2+pin_length/2])
   cylinder(h = pin_length, r1 = pin_diameter/2, r2 = pin_diameter/2, center = true, $fn=50);
-  translate([0, 0, height/2+(pin_length*7)/8])  
-  cylinder(h = pin_length/4, r1 = (pin_diameter)/2, r2 = (pin_diameter*1.2)/2, center = true, $fn=50);  
+  translate([0, 0, height/2+(pin_length*15)/16])  
+  cylinder(h = pin_length/8, r1 = (pin_diameter)/2, r2 = (pin_diameter*2)/2, center = true, $fn=50);  
+}
+
+module pinGeomVaseCylinder()
+{
+  cylinder(h = height, r1 = ring_diameter/2, r2 = ring_diameter/2, center = true);
+  translate([0, 0, height/2+pin_length/2])
+  {
+    difference()
+    {
+      cylinder(h = pin_length, r1 = pin_diameter/2, r2 = pin_diameter/2,   center = true, $fn=50);
+      scale([1,1,pin_length])
+      rotate_extrude(convexity = 10, $fn = 100)
+      { 
+            translate([pin_diameter/2, 0, 0]) scale([2, 1, 1]) rotate([0, 0, -90]) circle(d=1, $fn=50);
+      }   
+    }
+  }
 }
 
 module profileLinear(length)
@@ -71,5 +86,6 @@ adapterParts();
 }
 
 translate([rod_length+ring_diameter,0,0])
-      pinGeom();
+//pinGeomSimpleCylinderWithHat();
+pinGeomVaseCylinder();
 
