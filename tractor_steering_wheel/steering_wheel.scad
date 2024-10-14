@@ -1,22 +1,22 @@
 $fn=100; // Controls the smoothness, set to some high number (e.g. 300 to make very smooth)
 
 // Parameters
-inner_radius = 8.5;   // Radius of the torus
-side_length = 2;     // Length of the square cross-section side
-bevel = 0.75;           // Amount of bevel on the square's edges
-spoke_thickness = 1; // Thickness of each spoke
+inner_radius = 85.0;   // Radius of the torus
+side_length = 20;     // Length of the square cross-section side
+bevel = 7.5;           // Amount of bevel on the square's edges
+spoke_thickness = 10; // Thickness of each spoke
 //spoke_length = inner_radius; // Length of each spoke
 num_spokes = 3;      // Number of spokes (configurable)
 
-mount_offset = 6;
-mid_part_radius=3;
-mount_hole_radius=1.06/2;
-mount_hole_padding=0.5;
+mount_offset = 60;
+mid_part_radius=30;
+mount_hole_radius=10.6/2;
+mount_hole_padding=5;
 
-screw_hole_offset_from_bottom=1.52;
-screw_hole_radius=0.26;
-screw_head_radius=0.45;
-nut_radius=0.49;
+screw_hole_offset_from_bottom=15.2;
+screw_hole_radius=2.6;
+screw_head_radius=4.5;
+nut_radius=4.9;
 
 cut_out_triangle = true;
 
@@ -78,7 +78,7 @@ module hex_cutout(radius, height) {
 
 module triangle(){
 // Define edge length
-edge_length = 0.6;
+edge_length = 6.0;
 
 // Calculate the height of the equilateral triangle
 height = (sqrt(3) / 2) * edge_length;
@@ -115,7 +115,7 @@ module cutouts() {
     
     if (cut_out_triangle)
     {
-      translate([0, 0, mount_offset-0.2])
+      translate([0, 0, mount_offset-2.0])
       rotate([180,0,0])
       triangle();
     }
