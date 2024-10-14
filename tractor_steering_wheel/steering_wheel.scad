@@ -1,7 +1,7 @@
-$fn=30; // Controls the smoothness
+$fn=100; // Controls the smoothness, set to some high number (e.g. 300 to make very smooth)
 
 // Parameters
-inner_radius = 9;   // Radius of the torus
+inner_radius = 8.5;   // Radius of the torus
 side_length = 2;     // Length of the square cross-section side
 bevel = 0.75;           // Amount of bevel on the square's edges
 spoke_thickness = 1; // Thickness of each spoke
@@ -10,13 +10,15 @@ num_spokes = 3;      // Number of spokes (configurable)
 
 mount_offset = 6;
 mid_part_radius=3;
-mount_hole_radius=1.06;
+mount_hole_radius=1.06/2;
 mount_hole_padding=0.5;
 
 screw_hole_offset_from_bottom=1.52;
-screw_hole_radius=0.28;
+screw_hole_radius=0.26;
 screw_head_radius=0.45;
-nut_radius=0.85/2;
+nut_radius=0.49;
+
+cut_out_triangle = true;
 
 // Module to create a beveled square profile
 module beveled_square(size, bevel) {
@@ -74,8 +76,27 @@ module hex_cutout(radius, height) {
     }
 }
 
+module triangle(){
+// Define edge length
+edge_length = 0.6;
+
+// Calculate the height of the equilateral triangle
+height = (sqrt(3) / 2) * edge_length;
+
+translate ([-edge_length/2, -height/2, 0])
+linear_extrude(height = mount_offset+10) {
+    polygon(points=[
+        [0, 0], 
+        [edge_length, 0], 
+        [edge_length / 2, height]
+    ]);
+}
+    
+}
+
 module cutouts() {
     translate([0, 0, mount_offset-mid_part_radius/2])
+    //translate([0, 0, mount_offset])
     cylinder(h=mid_part_radius*2, r=mount_hole_radius, center=false);
     
     translate([0, 0, mount_offset+mid_part_radius-screw_hole_offset_from_bottom])
@@ -89,12 +110,26 @@ module cutouts() {
       rotate([180,0,0])  
       translate([0,0, mount_hole_radius+mount_hole_padding])
       cylinder(h=inner_radius*2, r=screw_head_radius, center=false);
-      //cylinder(h=inner_radius, r=2*screw_hole_radius, center=true);  
+      //cylinder(h=inner_radius, r=2*screw_hole_radius, center=true);    
+    }
+    
+    if (cut_out_triangle)
+    {
+      translate([0, 0, mount_offset-0.2])
+      rotate([180,0,0])
+      triangle();
     }
 }
 
 // Call the steering wheel module
+//intersection(){
+//triangle();
 difference(){
 steering_wheel();
 cutouts();
 }
+
+//translate([0, 0, mount_offset+mid_part_radius-screw_hole_offset_from_bottom])
+// cube([6, 2, 2], center=true);
+
+//}
