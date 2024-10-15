@@ -84,7 +84,7 @@ edge_length = 6.0;
 height = (sqrt(3) / 2) * edge_length;
 
 translate ([-edge_length/2, -height/2, 0])
-linear_extrude(height = mount_offset+10) {
+linear_extrude(height = mount_offset+100) {
     polygon(points=[
         [0, 0], 
         [edge_length, 0], 
@@ -105,7 +105,7 @@ module cutouts() {
       cylinder(h=inner_radius*2, r=screw_hole_radius, center=true);
       
       translate([0,0, mount_hole_radius+mount_hole_padding])
-      hex_cutout(nut_radius, 10);  
+      hex_cutout(nut_radius, 100);  
       
       rotate([180,0,0])  
       translate([0,0, mount_hole_radius+mount_hole_padding])
