@@ -5,18 +5,18 @@
 
 // Overall dimensions
 part_height = 15;              // Total height of the first section in mm
-extension_length = 20;         // Length of the transition section
-end_cube_size = 70;            // Edge length of the end cube
+extension_length = 30;         // Length of the transition section
+end_cube_size = 55;            // Edge length of the end cube
 
 // Profile dimensions
 cylinder_diameter = 30;        // Diameter of the circular end
 bolt_hole_diameter = 12;       // Diameter of the hole for the bolt
 
 // Fork dimensions
-fork_cutout_width = 50;        // The width of the material to remove (Y-axis)
-fork_cutout_depth = 70;        // The depth of the cut (X-axis)
-lock_cutout_length = 38;       // The total length of the locking slots
-lock_cutout_slot_width = 17;   // The width of the locking cutter
+fork_cutout_width = 35;        // The width of the material to remove (Y-axis)
+fork_cutout_depth = 65;        // The depth of the cut (X-axis)
+lock_cutout_length = 35;       // The total length of the locking slots
+lock_cutout_slot_width = 30;   // The width of the locking cutter
 lock_cutout_slot_height = 35;  // The height of the locking cutter
 
 // -- Modules --
@@ -28,18 +28,18 @@ module locking_cutter(length, width, height) {
         // Cylinder for the round end
         translate([-height / 4, 0, height/2]) {
             rotate([90, 0, 0]) { // Rotate around X-axis to align cylinder's height with Y-axis
-                cylinder(h = width, d = length - height / 2, center = true, $fn = 32);
+                cylinder(h = width, d = length, center = true, $fn = 32);
             }
         }
         // Cylinder for the round end
         translate([-height / 4, 0, -height/2]) {
             rotate([90, 0, 0]) { // Rotate around X-axis to align cylinder's height with Y-axis
-                cylinder(h = width, d = length - height / 2, center = true, $fn = 32);
+                cylinder(h = width, d = length, center = true, $fn = 32);
             }
         }
         // Cube for the straight body
         translate([-height / 4, 0, 0]) {
-            cube([length - height / 2, width, height], center = true);
+            cube([length, width, height], center = true);
         }
     }
 }
