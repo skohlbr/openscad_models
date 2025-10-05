@@ -6,7 +6,7 @@
 // Overall dimensions
 part_height = 15;              // Total height of the first section in mm
 extension_length = 30;         // Length of the transition section
-end_cube_size = 55;            // Edge length of the end cube
+end_cube_size = 52;            // Edge length of the end cube
 
 // Profile dimensions
 cylinder_diameter = 30;        // Diameter of the circular end
@@ -14,7 +14,7 @@ bolt_hole_diameter = 12;       // Diameter of the hole for the bolt
 
 // Fork dimensions
 fork_cutout_width = 35;        // The width of the material to remove (Y-axis)
-fork_cutout_depth = 65;        // The depth of the cut (X-axis)
+fork_cutout_depth = 60;        // The depth of the cut (X-axis)
 lock_cutout_length = 35;       // The total length of the locking slots
 lock_cutout_slot_width = 30;   // The width of the locking cutter
 lock_cutout_slot_height = 35;  // The height of the locking cutter
