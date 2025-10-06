@@ -16,14 +16,11 @@ bolt_hole_diameter = 12;       // Diameter of the hole for the bolt
 
 // Fork dimensions
 fork_cutout_width = 35;        // The width of the material to remove (Y-axis)
-<<<<<<< HEAD
 // CORRECTED: Cutout depth must be less than end_cube_size. 40mm leaves a 12mm back wall.
 fork_cutout_depth = 45;        
-=======
-fork_cutout_depth = 60;        // The depth of the cut (X-axis)
->>>>>>> 179f0ee67def8ff0b17fb6b21ebfa71538b6512d
+
 lock_cutout_length = 35;       // The total length of the locking slots
-lock_cutout_slot_width = 30;   // The width of the locking cutter
+lock_cutout_slot_width = 65;   // The width of the locking cutter
 lock_cutout_slot_height = 25;  // The height of the locking cutter
 lock_cutout_offset = 00;
 
@@ -93,7 +90,7 @@ difference() {
                         for (x = [-1, 1], y = [-1, 1]) {
                             translate([
                                 x * (end_cube_size / 2 - fillet_radius),
-                                y * (end_cube_size / 2 - fillet_radius)
+                                y * (end_cube_size*2 / 2 - fillet_radius)
                             ]) circle(r = fillet_radius);
                         }
                     }
