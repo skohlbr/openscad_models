@@ -8,7 +8,7 @@ $fn=128;
 // Overall dimensions
 part_height = 15;              // Total height of the first section in mm
 extension_length = 30;         // Length of the transition section
-end_cube_size = 52;            // Edge length of the end cube
+end_cube_size = 58;            // Edge length of the end cube
 
 // Profile dimensions
 cylinder_diameter = 30;        // Diameter of the circular end
@@ -20,7 +20,7 @@ fork_cutout_width = 35;        // The width of the material to remove (Y-axis)
 fork_cutout_depth = 45;        
 
 lock_cutout_length = 35;       // The total length of the locking slots
-lock_cutout_slot_width = 65;   // The width of the locking cutter
+lock_cutout_slot_width = 70;   // The width of the locking cutter
 lock_cutout_slot_height = 25;  // The height of the locking cutter
 lock_cutout_offset = 00;
 
@@ -29,6 +29,16 @@ fillet_radius = 5;             // Radius for internal and external fillets
 
 
 // -- Modules --
+
+module rounded_cutter(size, radius) {
+    hull() {
+        for (x = [-1, 1], y = [-1, 1]) {
+            translate([x * (size[0]/2 - radius), y * (size[1]/2 - radius), 0]) {
+                cylinder(h = size[2], r = radius, center=true);
+            }
+        }
+    }
+}
 
 // This module creates the custom-shaped cutter for the locking slots
 module locking_cutter(length, width, height) {
@@ -42,7 +52,22 @@ module locking_cutter(length, width, height) {
         translate([-lock_cutout_offset, 0, 0]) {
             cube([length, width, height], center = true);
         }
+        
+        translate([-lock_cutout_offset, 0, -lock_cutout_length-2]) {
+            rotate([90, 0, 90]) { cylinder(h = 50, d = 5, center = true); }
+        }
+        translate([-lock_cutout_offset, 10, -lock_cutout_length-2]) {
+            rotate([90, 0, 90]) { cylinder(h = 50, d = 5, center = true); }
+        }
+        translate([-lock_cutout_offset, 20, -lock_cutout_length-2]) {
+            rotate([90, 0, 90]) { cylinder(h = 50, d = 5, center = true); }
+        }
+        translate([-lock_cutout_offset, 30, -lock_cutout_length-2]) {
+            rotate([90, 0, 90]) { cylinder(h = 50, d = 5, center = true); }
+        }
     }
+    
+    
 }
 
 
@@ -106,18 +131,19 @@ difference() {
     cylinder(h = part_height + 2, d = bolt_hole_diameter, center = true);
     
     // b) The main fork slot
-    translate([main_cutter_center_x, 0, 0]) {
-        cube([fork_cutout_depth, fork_cutout_width, end_cube_size + 2], center = true);
+    translate([main_cutter_center_x+5, 0, 0]) {
+        rounded_cutter([fork_cutout_depth+10, fork_cutout_width, end_cube_size + 2], fillet_radius);
     }
     
-    // c) The mirrored locking cutouts
-    for (mirror = [1, -1]) {
-        translate([
-            fork_back_wall_x + (lock_cutout_length / 2),
-            tine_center_y * mirror,
-            locking_cut_center_z * mirror
-        ]) {
-            locking_cutter(lock_cutout_length, lock_cutout_slot_width, lock_cutout_slot_height);
+    for (angle = [0, 180]) {
+        rotate([angle, 0, 0]) {
+            translate([
+                fork_back_wall_x + (lock_cutout_length / 2),
+                tine_center_y,
+                locking_cut_center_z
+            ]) {
+                locking_cutter(lock_cutout_length, lock_cutout_slot_width, lock_cutout_slot_height);
+            }
         }
     }
 }
